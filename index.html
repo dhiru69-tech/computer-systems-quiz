@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Systems Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .timer-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        #timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2575fc;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            margin-top: 10px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        #progress {
+            height: 100%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            width: 0%;
+            transition: width 1s linear;
+        }
+        
+        .quiz-container {
+            padding: 30px;
+        }
+        
+        .instructions {
+            background-color: #e8f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #2575fc;
+        }
+        
+        .instructions h3 {
+            color: #2575fc;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: #2575fc;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .question-text {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option input {
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .fill-blank {
+            display: inline-block;
+            border-bottom: 1px solid #333;
+            min-width: 150px;
+            margin: 0 5px;
+            padding: 5px 0;
+        }
+        
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 200px;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+        }
+        
+        .result-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #2575fc;
+            margin: 20px 0;
+        }
+        
+        .score-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .answers-review {
+            text-align: left;
+            margin-top: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .wrong-answer {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .user-answer {
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Computer Systems Quiz</h1>
+            <p class="subtitle">Test your knowledge of computer architecture and organization</p>
+        </header>
+        
+        <div class="timer-container">
+            <div id="timer">30:00</div>
+            <div class="progress-bar">
+                <div id="progress"></div>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-content">
+            <div class="instructions">
+                <h3>Instructions:</h3>
+                <ul>
+                    <li>This quiz contains 20 questions (10 Multiple Choice and 10 Fill in the Blanks)</li>
+                    <li>You have 30 minutes to complete the quiz</li>
+                    <li>The quiz will auto-submit when the timer reaches zero</li>
+                    <li>Each question carries equal marks</li>
+                    <li>Do not refresh the page during the quiz</li>
+                </ul>
+            </div>
+            
+            <form id="quiz-form">
+                <!-- Questions will be dynamically inserted here -->
+            </form>
+            
+            <div class="btn-container">
+                <button type="button" id="submit-btn">Submit Quiz</button>
+            </div>
+        </div>
+        
+        <div class="result-container" id="result-content">
+            <h2>Quiz Results</h2>
+            <div class="score" id="score-display">0/20</div>
+            <div class="score-text" id="score-text">Keep practicing!</div>
+            <div class="answers-review" id="answers-review">
+                <!-- Answers review will be inserted here -->
+            </div>
+            <div class="btn-container" style="margin-top: 30px;">
+                <button type="button" id="restart-btn">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions and answers
+        const quizData = [
+            {
+                type: "mcq",
+                question: "Which component is NOT typically considered a primary hardware component of a computer system?",
+                options: ["Power Supply", "Cooling System", "Operating System", "NIC"],
+                answer: "c"
+            },
+            {
+                type: "fill",
+                question: "The __________ domain in the computer abstraction hierarchy includes logic gates and integrated circuits.",
+                answer: "digital"
+            },
+            {
+                type: "mcq",
+                question: "Computer Architecture is primarily concerned with:",
+                options: [
+                    "Control signals and memory technology",
+                    "Instruction set and I/O mechanisms",
+                    "Hardware details transparent to the programmer",
+                    "Interconnections between peripherals"
+                ],
+                answer: "b"
+            },
+            {
+                type: "fill",
+                question: "The four basic functions of a computer are data processing, data storage, data movement, and __________.",
+                answer: "control"
+            },
+            {
+                type: "mcq",
+                question: "Which of the following is NOT a structural component of a computer?",
+                options: ["CPU", "Main Memory", "System Interconnection", "Cache Memory"],
+                answer: "d"
+            },
+            {
+                type: "fill",
+                question: "In a multicore processor, the __________ is the individual processing unit on the processor chip.",
+                answer: "core"
+            },
+            {
+                type: "mcq",
+                question: "Cache memory is used primarily to:",
+                options: [
+                    "Replace main memory",
+                    "Store operating system files",
+                    "Speed up memory access",
+                    "Increase storage capacity"
+                ],
+                answer: "c"
+            },
+            {
+                type: "fill",
+                question: "The IAS computer was based on the __________ concept, attributed to John von Neumann.",
+                answer: "stored program"
+            },
+            {
+                type: "mcq",
+                question: "Which register in the IAS architecture holds the address of the next instruction to be fetched?",
+                options: ["MBR", "MAR", "PC", "IBR"],
+                answer: "c"
+            },
+            {
+                type: "fill",
+                question: "The invention of the __________ marked the beginning of the second generation of computers.",
+                answer: "transistor"
+            },
+            {
+                type: "mcq",
+                question: "Which generation of computers introduced the use of integrated circuits?",
+                options: ["First", "Second", "Third", "Fourth"],
+                answer: "c"
+            },
+            {
+                type: "fill",
+                question: "Moore's Law originally stated that the number of transistors on a chip would double every __________.",
+                answer: "year"
+            },
+            {
+                type: "mcq",
+                question: "The IBM System/360 was notable for being:",
+                options: [
+                    "The first vacuum tube computer",
+                    "The first planned family of computers",
+                    "The first transistorized computer",
+                    "The first personal computer"
+                ],
+                answer: "b"
+            },
+            {
+                type: "fill",
+                question: "The first microprocessor developed by Intel was the __________.",
+                answer: "4004"
+            },
+            {
+                type: "mcq",
+                question: "Which of the following was the first 8-bit microprocessor from Intel?",
+                options: ["4004", "8008", "8080", "8086"],
+                answer: "b"
+            },
+            {
+                type: "fill",
+                question: "The __________ is a mechanism that provides communication among CPU, main memory, and I/O.",
+                answer: "System Interconnection"
+            },
+            {
+                type: "mcq",
+                question: "Which Intel processor first introduced superscalar techniques?",
+                options: ["8086", "Pentium", "Pentium Pro", "Core 2 Duo"],
+                answer: "b"
+            },
+            {
+                type: "fill",
+                question: "The two main processor families discussed in the lecture are Intel x86 and __________.",
+                answer: "ARM"
+            },
+            {
+                type: "mcq",
+                question: "Which component temporarily holds the right-hand instruction from a memory word in the IAS system?",
+                options: ["IR", "IBR", "MQ", "AC"],
+                answer: "b"
+            },
+            {
+                type: "fill",
+                question: "The __________ unit manages the computer's resources and orchestrates the performance of its functional parts.",
+                answer: "control"
+            }
+        ];
+
+        // DOM elements
+        const quizForm = document.getElementById('quiz-form');
+        const quizContent = document.getElementById('quiz-content');
+        const resultContent = document.getElementById('result-content');
+        const timerDisplay = document.getElementById('timer');
+        const progressBar = document.getElementById('progress');
+        const submitBtn = document.getElementById('submit-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreText = document.getElementById('score-text');
+        const answersReview = document.getElementById('answers-review');
+
+        // Timer variables
+        let timeLeft = 30 * 60; // 30 minutes in seconds
+        let timerInterval;
+
+        // Initialize the quiz
+        function initQuiz() {
+            // Render questions
+            renderQuestions();
+            
+            // Start timer
+            startTimer();
+            
+            // Add event listeners
+            submitBtn.addEventListener('click', submitQuiz);
+            restartBtn.addEventListener('click', restartQuiz);
+        }
+
+        // Render questions in the form
+        function renderQuestions() {
+            quizData.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Question ${index + 1}:`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                
+                if (question.type === 'mcq') {
+                    questionText.textContent = question.question;
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+                    
+                    question.options.forEach((option, optIndex) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `question-${index}`;
+                        input.id = `question-${index}-option-${optIndex}`;
+                        input.value = String.fromCharCode(97 + optIndex); // a, b, c, d
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = `question-${index}-option-${optIndex}`;
+                        label.textContent = option;
+                        
+                        optionDiv.appendChild(input);
+                        optionDiv.appendChild(label);
+                        optionsDiv.appendChild(optionDiv);
+                    });
+                    
+                    questionDiv.appendChild(questionNumber);
+                    questionDiv.appendChild(questionText);
+                    questionDiv.appendChild(optionsDiv);
+                } else {
+                    // Fill in the blank question
+                    const questionParts = question.question.split('__________');
+                    questionText.innerHTML = `
+                        ${questionParts[0]} 
+                        <input type="text" name="question-${index}" id="question-${index}">
+                        ${questionParts[1] || ''}
+                    `;
+                    
+                    questionDiv.appendChild(questionNumber);
+                    questionDiv.appendChild(questionText);
+                }
+                
+                quizForm.appendChild(questionDiv);
+            });
+        }
+
+        // Start the countdown timer
+        function startTimer() {
+            updateTimerDisplay();
+            progressBar.style.width = '100%';
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                updateProgressBar();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // Update the timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running out
+            if (timeLeft < 300) { // 5 minutes
+                timerDisplay.style.color = '#dc3545';
+            }
+        }
+
+        // Update the progress bar
+        function updateProgressBar() {
+            const progressPercentage = (timeLeft / (30 * 60)) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Submit the quiz and calculate score
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            let userAnswers = [];
+            
+            // Calculate score and collect answers
+            quizData.forEach((question, index) => {
+                let userAnswer;
+                let isCorrect = false;
+                
+                if (question.type === 'mcq') {
+                    const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+                    userAnswer = selectedOption ? selectedOption.value : 'Not answered';
+                    isCorrect = userAnswer === question.answer;
+                } else {
+                    const input = document.getElementById(`question-${index}`);
+                    userAnswer = input ? input.value.trim().toLowerCase() : 'Not answered';
+                    isCorrect = userAnswer === question.answer.toLowerCase();
+                }
+                
+                if (isCorrect) score++;
+                
+                userAnswers.push({
+                    question: question.question,
+                    userAnswer: userAnswer,
+                    correctAnswer: question.type === 'mcq' ? question.answer : question.answer,
+                    isCorrect: isCorrect
+                });
+            });
+            
+            // Display results
+            displayResults(score, userAnswers);
+        }
+
+        // Display quiz results
+        function displayResults(score, userAnswers) {
+            // Hide quiz content, show results
+            quizContent.style.display = 'none';
+            resultContent.style.display = 'block';
+            
+            // Update score display
+            scoreDisplay.textContent = `${score}/20`;
+            
+            // Set score text based on performance
+            if (score >= 18) {
+                scoreText.textContent = "Excellent! You have a strong understanding of computer systems.";
+            } else if (score >= 15) {
+                scoreText.textContent = "Good job! You have a solid grasp of computer systems concepts.";
+            } else if (score >= 10) {
+                scoreText.textContent = "Not bad! Review the material to improve your understanding.";
+            } else {
+                scoreText.textContent = "Keep studying! Review the lecture materials and try again.";
+            }
+            
+            // Display answers review
+            let reviewHTML = '<h3>Review Your Answers:</h3>';
+            userAnswers.forEach((answer, index) => {
+                reviewHTML += `
+                    <div class="question-review" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #dee2e6;">
+                        <p><strong>Question ${index + 1}:</strong> ${answer.question}</p>
+                        <p class="${answer.isCorrect ? 'correct-answer' : 'wrong-answer'}">
+                            Your answer: ${answer.userAnswer} 
+                            ${!answer.isCorrect ? `<span class="user-answer">(Correct: ${answer.correctAnswer})</span>` : ''}
+                        </p>
+                    </div>
+                `;
+            });
+            
+            answersReview.innerHTML = reviewHTML;
+            
+            // Scroll to top of results
+            window.scrollTo(0, 0);
+        }
+
+        // Restart the quiz
+        function restartQuiz() {
+            // Reset timer
+            timeLeft = 30 * 60;
+            
+            // Clear form
+            quizForm.innerHTML = '';
+            
+            // Hide results, show quiz
+            resultContent.style.display = 'none';
+            quizContent.style.display = 'block';
+            
+            // Reinitialize quiz
+            initQuiz();
+        }
+
+        // Initialize the quiz when the page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
