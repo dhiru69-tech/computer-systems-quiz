@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Systems Quiz</title>
+    <title>Probability & Statistics Exam</title>
     <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,614 +24,712 @@
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            padding: 20px;
         }
         
         header {
-            background: linear-gradient(to right, #2575fc, #6a11cb);
+            background-color: var(--primary);
             color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .timer-container {
-            background-color: #f8f9fa;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        #timer {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2575fc;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background-color: #e9ecef;
-            margin-top: 10px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        #progress {
-            height: 100%;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            width: 0%;
-            transition: width 1s linear;
-        }
-        
-        .quiz-container {
-            padding: 30px;
-        }
-        
-        .instructions {
-            background-color: #e8f4ff;
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            border-left: 5px solid #2575fc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .instructions h3 {
-            color: #2575fc;
-            margin-bottom: 10px;
-        }
-        
-        .instructions ul {
-            margin-left: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-        }
-        
-        .question-container {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #f8f9fa;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-        
-        .question-number {
+        .timer {
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #2575fc;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            background-color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+        }
+        
+        .timer.warning {
+            background-color: var(--warning);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        
+        .timer.danger {
+            background-color: var(--accent);
+            color: white;
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .exam-info {
+            margin-bottom: 20px;
+        }
+        
+        .question-set {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .set-title {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
         }
         
         .question-text {
             margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.5;
+            font-weight: 500;
         }
         
         .options {
-            margin-left: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
         
         .option {
-            margin-bottom: 10px;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .option.selected {
+            background-color: #e1f5fe;
+            border-color: var(--secondary);
         }
         
         .option input {
             margin-right: 10px;
-            margin-top: 5px;
         }
         
-        .fill-blank {
-            display: inline-block;
-            border-bottom: 1px solid #333;
-            min-width: 150px;
-            margin: 0 5px;
-            padding: 5px 0;
-        }
-        
-        input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 200px;
-        }
-        
-        .btn-container {
-            text-align: center;
+        .controls {
+            display: flex;
+            justify-content: space-between;
             margin-top: 30px;
         }
         
         button {
-            background: linear-gradient(to right, #2575fc, #6a11cb);
-            color: white;
+            padding: 12px 25px;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-fullscreen {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-submit {
+            background-color: var(--success);
+            color: white;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         
-        .result-container {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .score {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #2575fc;
-            margin: 20px 0;
-        }
-        
-        .score-text {
+        .fullscreen-notice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
             font-size: 1.5rem;
-            margin-bottom: 30px;
-        }
-        
-        .answers-review {
-            text-align: left;
-            margin-top: 30px;
-            background-color: #f8f9fa;
+            text-align: center;
             padding: 20px;
-            border-radius: 10px;
         }
         
-        .correct-answer {
-            color: #28a745;
-            font-weight: bold;
+        .fullscreen-notice.hidden {
+            display: none;
         }
         
-        .wrong-answer {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        
-        .user-answer {
-            margin-left: 10px;
+        .fullscreen-notice button {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            padding: 15px 30px;
         }
         
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
+            .options {
+                grid-template-columns: 1fr;
             }
             
-            h1 {
-                font-size: 2rem;
+            header {
+                flex-direction: column;
+                gap: 15px;
             }
             
-            .quiz-container {
-                padding: 20px;
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <div class="fullscreen-notice" id="fullscreenNotice">
+        <h2>Exam Starting</h2>
+        <p>This exam will now open in full-screen mode.</p>
+        <p>You have 50 minutes to complete all questions.</p>
+        <p>Do not refresh or leave the page during the exam.</p>
+        <button class="btn-fullscreen" id="startExamBtn">Start Exam</button>
+    </div>
+
     <div class="container">
         <header>
-            <h1>Computer Systems Quiz</h1>
-            <p class="subtitle">Test your knowledge of computer architecture and organization</p>
+            <div class="exam-info">
+                <h1>Probability & Statistics Exam</h1>
+                <p>Answer all questions. You have 50 minutes.</p>
+            </div>
+            <div class="timer" id="timer">50:00</div>
         </header>
-        
-        <div class="timer-container">
-            <div id="timer">30:00</div>
-            <div class="progress-bar">
-                <div id="progress"></div>
-            </div>
-        </div>
-        
-        <div class="quiz-container" id="quiz-content">
-            <div class="instructions">
-                <h3>Instructions:</h3>
-                <ul>
-                    <li>This quiz contains 20 questions (10 Multiple Choice and 10 Fill in the Blanks)</li>
-                    <li>You have 30 minutes to complete the quiz</li>
-                    <li>The quiz will auto-submit when the timer reaches zero</li>
-                    <li>Each question carries equal marks</li>
-                    <li>Do not refresh the page during the quiz</li>
-                </ul>
+
+        <form id="examForm">
+            <!-- Set 1: Coin Toss Example -->
+            <div class="question-set">
+                <h2 class="set-title">Set 1: Coin Toss Example</h2>
+                <p>These questions refer to the example of tossing a fair coin three times, with events:</p>
+                <p>A = {more heads than tails come up}</p>
+                <p>B = {1st toss is a head}</p>
+                
+                <div class="question">
+                    <p class="question-text">1. Based on the problem's sample space, what is the probability P(B∣A)? (The probability the first toss was a head, given that there were more heads than tails).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="a"> a) 3/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="b"> b) 1/2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="c"> c) 3/8
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="d"> d) 1
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">2. What is the probability P(A∣B<sup>c</sup>)? (The probability of more heads than tails, given the first toss was not a head).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="a"> a) 1/8
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="b"> b) 1/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="c"> c) 1/2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="d"> d) 3/4
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">3. What is the probability P(A<sup>c</sup>∣B)? (The probability there were not more heads than tails, given the first toss was a head).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="a"> a) 1/8
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="b"> b) 1/2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="c"> c) 3/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="d"> d) 1/4
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">4. Let's analyze the document's own data. The document incorrectly lists A∩B={HHH,HHT,HTT,HTH}. If this set were correct, what would the calculated value of P(A∣B) have been?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="a"> a) 3/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="b"> b) 1/2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="c"> c) 1
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="d"> d) 3/8
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">5. Define a new event, C = {The third toss is a head}. Using the event B = {1st toss is a head}, what is P(C∣B)?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="a"> a) 1/2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="b"> b) 1/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="c"> c) 3/4
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="d"> d) 1
+                        </label>
+                    </div>
+                </div>
             </div>
             
-            <form id="quiz-form">
-                <!-- Questions will be dynamically inserted here -->
-            </form>
+            <!-- Set 2: Radar Detection Example -->
+            <div class="question-set">
+                <h2 class="set-title">Set 2: Radar Detection Example</h2>
+                <p>These questions refer to the radar detection example with events:</p>
+                <p>A = {an aircraft is present}, with P(A)=0.05</p>
+                <p>B = {the radar generates an alarm}</p>
+                <p>Given: P(B∣A)=0.99 and P(B∣A<sup>c</sup>)=0.10</p>
+                
+                <div class="question">
+                    <p class="question-text">6. What is the probability P(A∩B)? (An aircraft is present AND the radar generates an alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="a"> a) 0.05
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="b"> b) 0.99
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="c"> c) 0.0495
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="d"> d) 0.005
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">7. What is the probability P(A<sup>c</sup>∩B<sup>c</sup>)? (No aircraft is present AND the radar does not generate an alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q7" value="a"> a) 0.90
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="b"> b) 0.855
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="c"> c) 0.95
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="d"> d) 0.10
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">8. What is the total probability of the radar generating an alarm, P(B)? (Hint: An alarm can be a true detection or a false alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q8" value="a"> a) 1.09
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="b"> b) 0.99
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="c"> c) 0.10
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="d"> d) 0.1445
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">9. What is the total probability of the radar not generating an alarm, P(B<sup>c</sup>)?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q9" value="a"> a) 0.8555
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="b"> b) 0.91
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="c"> c) 0.01
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="d"> d) 0.90
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">10. What is P(A∣B)? (The probability an aircraft is actually present, given that the radar has generated an alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q10" value="a"> a) ≈0.3426
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="b"> b) ≈0.0495
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="c"> c) ≈0.6574
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="d"> d) ≈0.99
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">11. What is P(A<sup>c</sup>∣B)? (The probability an aircraft is not present, given that the radar has generated an alarm, i.e., the probability of a false alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q11" value="a"> a) ≈0.10
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="b"> b) ≈0.095
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="c"> c) ≈0.3426
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q11" value="d"> d) ≈0.6574
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">12. What is P(A∣B<sup>c</sup>)? (The probability an aircraft is present, given that the radar did not generate an alarm).</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q12" value="a"> a) 0.01
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="b"> b) ≈0.000584
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="c"> c) ≈0.0005
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q12" value="d"> d) ≈0.05
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">13. In the context of the radar problem, what does the value P(B<sup>c</sup>∣A) represent?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q13" value="a"> a) The probability of a false alarm.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q13" value="b"> b) The probability of a correct detection.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q13" value="c"> c) The probability of a "miss" (aircraft is present, but no alarm).
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q13" value="d"> d) The probability of a "correct rejection" (no aircraft, no alarm).
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">14. The document calculates P(A<sup>c</sup>∩B) and P(A∩B<sup>c</sup>). What is the sum of these two probabilities (0.095+0.0005)?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q14" value="a"> a) The total probability of an alarm, P(B).
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q14" value="b"> b) The total probability of no alarm, P(B<sup>c</sup>).
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q14" value="c"> c) The total probability of an error (either a false alarm or a miss).
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q14" value="d"> d) 1
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">15. Using the given data, which calculation is derived by correctly applying the formula?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q15" value="a"> a) P(A∩B)=P(A)×P(B)=0.05×0.1445
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q15" value="b"> b) P(A<sup>c</sup>∩B)=P(A<sup>c</sup>)×P(B∣A<sup>c</sup>)=0.95×0.10
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q15" value="c"> c) P(A∩B)=P(B)×P(B∣A)=0.1445×0.99
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q15" value="d"> d) P(A<sup>c</sup>∩B)=P(B)×P(A<sup>c</sup>∣B)=0.1445×0.6574
+                        </label>
+                    </div>
+                </div>
+            </div>
             
-            <div class="btn-container">
-                <button type="button" id="submit-btn">Submit Quiz</button>
+            <!-- Set 3: General Definitions & Multiplication Rule -->
+            <div class="question-set">
+                <h2 class="set-title">Set 3: General Definitions & Multiplication Rule</h2>
+                
+                <div class="question">
+                    <p class="question-text">16. The Multiplication Rule is given as P(A<sub>1</sub>∩A<sub>2</sub>∩A<sub>3</sub>) = P(A<sub>1</sub>)⋅P(A<sub>2</sub>∣A<sub>1</sub>)⋅P(A<sub>3</sub>∣A<sub>1</sub>∩A<sub>2</sub>). If P(A<sub>1</sub>∩A<sub>2</sub>∩A<sub>3</sub>) = 0.06, P(A<sub>1</sub>) = 0.5, and P(A<sub>2</sub>∣A<sub>1</sub>) = 0.4, what is P(A<sub>3</sub>∣A<sub>1</sub>∩A<sub>2</sub>)?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q16" value="a"> a) 0.3
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q16" value="b"> b) 0.2
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q16" value="c"> c) 0.12
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q16" value="d"> d) 0.5
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">17. Apply the Multiplication Rule to a new problem: An urn contains 4 red balls and 6 white balls (10 total). You draw 3 balls without replacement. What is the probability of drawing three red balls (R<sub>1</sub>∩R<sub>2</sub>∩R<sub>3</sub>)?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q17" value="a"> a) (0.4)×(0.4)×(0.4)=0.064
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q17" value="b"> b) (4/10)×(3/9)×(2/8)≈0.033
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q17" value="c"> c) (4/10)+(3/9)+(2/8)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q17" value="d"> d) (4/10)×(4/9)×(4/8)=0.088
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p class="question-text">18. Using the relationship P(A∩B)=P(B)⋅P(A∣B), if you know P(A∩B)=0.3 and P(A∣B)=0.6, what must P(B) be?</p>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q18" value="a"> a) 0.18
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q18" value="b"> b) 0.5
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q18" value="c"> c) 2.0
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q18" value="d"> d) 0.3
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <div class="result-container" id="result-content">
-            <h2>Quiz Results</h2>
-            <div class="score" id="score-display">0/20</div>
-            <div class="score-text" id="score-text">Keep practicing!</div>
-            <div class="answers-review" id="answers-review">
-                <!-- Answers review will be inserted here -->
+            
+            <div class="controls">
+                <button type="button" class="btn-fullscreen" id="toggleFullscreen">Enter Full Screen</button>
+                <button type="button" class="btn-submit" id="submitBtn">Submit Exam</button>
             </div>
-            <div class="btn-container" style="margin-top: 30px;">
-                <button type="button" id="restart-btn">Take Quiz Again</button>
-            </div>
-        </div>
+        </form>
     </div>
 
     <script>
-        // Quiz questions and answers
-        const quizData = [
-            {
-                type: "mcq",
-                question: "Which component is NOT typically considered a primary hardware component of a computer system?",
-                options: ["Power Supply", "Cooling System", "Operating System", "NIC"],
-                answer: "c"
-            },
-            {
-                type: "fill",
-                question: "The __________ domain in the computer abstraction hierarchy includes logic gates and integrated circuits.",
-                answer: "digital"
-            },
-            {
-                type: "mcq",
-                question: "Computer Architecture is primarily concerned with:",
-                options: [
-                    "Control signals and memory technology",
-                    "Instruction set and I/O mechanisms",
-                    "Hardware details transparent to the programmer",
-                    "Interconnections between peripherals"
-                ],
-                answer: "b"
-            },
-            {
-                type: "fill",
-                question: "The four basic functions of a computer are data processing, data storage, data movement, and __________.",
-                answer: "control"
-            },
-            {
-                type: "mcq",
-                question: "Which of the following is NOT a structural component of a computer?",
-                options: ["CPU", "Main Memory", "System Interconnection", "Cache Memory"],
-                answer: "d"
-            },
-            {
-                type: "fill",
-                question: "In a multicore processor, the __________ is the individual processing unit on the processor chip.",
-                answer: "core"
-            },
-            {
-                type: "mcq",
-                question: "Cache memory is used primarily to:",
-                options: [
-                    "Replace main memory",
-                    "Store operating system files",
-                    "Speed up memory access",
-                    "Increase storage capacity"
-                ],
-                answer: "c"
-            },
-            {
-                type: "fill",
-                question: "The IAS computer was based on the __________ concept, attributed to John von Neumann.",
-                answer: "stored program"
-            },
-            {
-                type: "mcq",
-                question: "Which register in the IAS architecture holds the address of the next instruction to be fetched?",
-                options: ["MBR", "MAR", "PC", "IBR"],
-                answer: "c"
-            },
-            {
-                type: "fill",
-                question: "The invention of the __________ marked the beginning of the second generation of computers.",
-                answer: "transistor"
-            },
-            {
-                type: "mcq",
-                question: "Which generation of computers introduced the use of integrated circuits?",
-                options: ["First", "Second", "Third", "Fourth"],
-                answer: "c"
-            },
-            {
-                type: "fill",
-                question: "Moore's Law originally stated that the number of transistors on a chip would double every __________.",
-                answer: "year"
-            },
-            {
-                type: "mcq",
-                question: "The IBM System/360 was notable for being:",
-                options: [
-                    "The first vacuum tube computer",
-                    "The first planned family of computers",
-                    "The first transistorized computer",
-                    "The first personal computer"
-                ],
-                answer: "b"
-            },
-            {
-                type: "fill",
-                question: "The first microprocessor developed by Intel was the __________.",
-                answer: "4004"
-            },
-            {
-                type: "mcq",
-                question: "Which of the following was the first 8-bit microprocessor from Intel?",
-                options: ["4004", "8008", "8080", "8086"],
-                answer: "b"
-            },
-            {
-                type: "fill",
-                question: "The __________ is a mechanism that provides communication among CPU, main memory, and I/O.",
-                answer: "System Interconnection"
-            },
-            {
-                type: "mcq",
-                question: "Which Intel processor first introduced superscalar techniques?",
-                options: ["8086", "Pentium", "Pentium Pro", "Core 2 Duo"],
-                answer: "b"
-            },
-            {
-                type: "fill",
-                question: "The two main processor families discussed in the lecture are Intel x86 and __________.",
-                answer: "ARM"
-            },
-            {
-                type: "mcq",
-                question: "Which component temporarily holds the right-hand instruction from a memory word in the IAS system?",
-                options: ["IR", "IBR", "MQ", "AC"],
-                answer: "b"
-            },
-            {
-                type: "fill",
-                question: "The __________ unit manages the computer's resources and orchestrates the performance of its functional parts.",
-                answer: "control"
-            }
-        ];
-
-        // DOM elements
-        const quizForm = document.getElementById('quiz-form');
-        const quizContent = document.getElementById('quiz-content');
-        const resultContent = document.getElementById('result-content');
-        const timerDisplay = document.getElementById('timer');
-        const progressBar = document.getElementById('progress');
-        const submitBtn = document.getElementById('submit-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const scoreDisplay = document.getElementById('score-display');
-        const scoreText = document.getElementById('score-text');
-        const answersReview = document.getElementById('answers-review');
-
-        // Timer variables
-        let timeLeft = 30 * 60; // 30 minutes in seconds
-        let timerInterval;
-
-        // Initialize the quiz
-        function initQuiz() {
-            // Render questions
-            renderQuestions();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Full screen functionality
+            const fullscreenNotice = document.getElementById('fullscreenNotice');
+            const startExamBtn = document.getElementById('startExamBtn');
+            const toggleFullscreenBtn = document.getElementById('toggleFullscreen');
+            const timerElement = document.getElementById('timer');
+            const submitBtn = document.getElementById('submitBtn');
+            const examForm = document.getElementById('examForm');
             
-            // Start timer
-            startTimer();
+            let timerInterval;
+            let timeLeft = 50 * 60; // 50 minutes in seconds
             
-            // Add event listeners
-            submitBtn.addEventListener('click', submitQuiz);
-            restartBtn.addEventListener('click', restartQuiz);
-        }
-
-        // Render questions in the form
-        function renderQuestions() {
-            quizData.forEach((question, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question-container';
-                
-                const questionNumber = document.createElement('div');
-                questionNumber.className = 'question-number';
-                questionNumber.textContent = `Question ${index + 1}:`;
-                
-                const questionText = document.createElement('div');
-                questionText.className = 'question-text';
-                
-                if (question.type === 'mcq') {
-                    questionText.textContent = question.question;
-                    
-                    const optionsDiv = document.createElement('div');
-                    optionsDiv.className = 'options';
-                    
-                    question.options.forEach((option, optIndex) => {
-                        const optionDiv = document.createElement('div');
-                        optionDiv.className = 'option';
-                        
-                        const input = document.createElement('input');
-                        input.type = 'radio';
-                        input.name = `question-${index}`;
-                        input.id = `question-${index}-option-${optIndex}`;
-                        input.value = String.fromCharCode(97 + optIndex); // a, b, c, d
-                        
-                        const label = document.createElement('label');
-                        label.htmlFor = `question-${index}-option-${optIndex}`;
-                        label.textContent = option;
-                        
-                        optionDiv.appendChild(input);
-                        optionDiv.appendChild(label);
-                        optionsDiv.appendChild(optionDiv);
-                    });
-                    
-                    questionDiv.appendChild(questionNumber);
-                    questionDiv.appendChild(questionText);
-                    questionDiv.appendChild(optionsDiv);
-                } else {
-                    // Fill in the blank question
-                    const questionParts = question.question.split('__________');
-                    questionText.innerHTML = `
-                        ${questionParts[0]} 
-                        <input type="text" name="question-${index}" id="question-${index}">
-                        ${questionParts[1] || ''}
-                    `;
-                    
-                    questionDiv.appendChild(questionNumber);
-                    questionDiv.appendChild(questionText);
-                }
-                
-                quizForm.appendChild(questionDiv);
+            // Show fullscreen notice on page load
+            fullscreenNotice.classList.remove('hidden');
+            
+            // Start exam button
+            startExamBtn.addEventListener('click', function() {
+                fullscreenNotice.classList.add('hidden');
+                startTimer();
+                enterFullscreen();
             });
-        }
-
-        // Start the countdown timer
-        function startTimer() {
-            updateTimerDisplay();
-            progressBar.style.width = '100%';
             
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                updateProgressBar();
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    submitQuiz();
-                }
-            }, 1000);
-        }
-
-        // Update the timer display
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            // Change color when time is running out
-            if (timeLeft < 300) { // 5 minutes
-                timerDisplay.style.color = '#dc3545';
-            }
-        }
-
-        // Update the progress bar
-        function updateProgressBar() {
-            const progressPercentage = (timeLeft / (30 * 60)) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-        }
-
-        // Submit the quiz and calculate score
-        function submitQuiz() {
-            clearInterval(timerInterval);
-            
-            let score = 0;
-            let userAnswers = [];
-            
-            // Calculate score and collect answers
-            quizData.forEach((question, index) => {
-                let userAnswer;
-                let isCorrect = false;
-                
-                if (question.type === 'mcq') {
-                    const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
-                    userAnswer = selectedOption ? selectedOption.value : 'Not answered';
-                    isCorrect = userAnswer === question.answer;
+            // Toggle fullscreen button
+            toggleFullscreenBtn.addEventListener('click', function() {
+                if (document.fullscreenElement) {
+                    exitFullscreen();
                 } else {
-                    const input = document.getElementById(`question-${index}`);
-                    userAnswer = input ? input.value.trim().toLowerCase() : 'Not answered';
-                    isCorrect = userAnswer === question.answer.toLowerCase();
+                    enterFullscreen();
+                }
+            });
+            
+            // Submit button
+            submitBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to submit your exam? This action cannot be undone.')) {
+                    clearInterval(timerInterval);
+                    alert('Exam submitted! Your answers have been recorded.');
+                    // In a real application, you would submit the form data to a server here
+                }
+            });
+            
+            // Timer functionality
+            function startTimer() {
+                updateTimerDisplay();
+                
+                timerInterval = setInterval(function() {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        alert('Time is up! Your exam will be automatically submitted.');
+                        // In a real application, you would submit the form data to a server here
+                    }
+                }, 1000);
+            }
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Change timer color based on remaining time
+                timerElement.classList.remove('warning', 'danger');
+                if (timeLeft <= 10 * 60) { // 10 minutes left
+                    timerElement.classList.add('warning');
+                }
+                if (timeLeft <= 5 * 60) { // 5 minutes left
+                    timerElement.classList.remove('warning');
+                    timerElement.classList.add('danger');
+                }
+            }
+            
+            // Fullscreen functionality
+            function enterFullscreen() {
+                const element = document.documentElement;
+                
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
                 }
                 
-                if (isCorrect) score++;
+                toggleFullscreenBtn.textContent = 'Exit Full Screen';
+            }
+            
+            function exitFullscreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
                 
-                userAnswers.push({
-                    question: question.question,
-                    userAnswer: userAnswer,
-                    correctAnswer: question.type === 'mcq' ? question.answer : question.answer,
-                    isCorrect: isCorrect
+                toggleFullscreenBtn.textContent = 'Enter Full Screen';
+            }
+            
+            // Update fullscreen button text when fullscreen state changes
+            document.addEventListener('fullscreenchange', updateFullscreenButton);
+            document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+            document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+            document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+            
+            function updateFullscreenButton() {
+                if (document.fullscreenElement || document.webkitFullscreenElement || 
+                    document.mozFullScreenElement || document.msFullscreenElement) {
+                    toggleFullscreenBtn.textContent = 'Exit Full Screen';
+                } else {
+                    toggleFullscreenBtn.textContent = 'Enter Full Screen';
+                }
+            }
+            
+            // Make option selection more visually appealing
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // Update visual state of all options in this question
+                    const question = this.closest('.question');
+                    question.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
                 });
             });
             
-            // Display results
-            displayResults(score, userAnswers);
-        }
-
-        // Display quiz results
-        function displayResults(score, userAnswers) {
-            // Hide quiz content, show results
-            quizContent.style.display = 'none';
-            resultContent.style.display = 'block';
-            
-            // Update score display
-            scoreDisplay.textContent = `${score}/20`;
-            
-            // Set score text based on performance
-            if (score >= 18) {
-                scoreText.textContent = "Excellent! You have a strong understanding of computer systems.";
-            } else if (score >= 15) {
-                scoreText.textContent = "Good job! You have a solid grasp of computer systems concepts.";
-            } else if (score >= 10) {
-                scoreText.textContent = "Not bad! Review the material to improve your understanding.";
-            } else {
-                scoreText.textContent = "Keep studying! Review the lecture materials and try again.";
-            }
-            
-            // Display answers review
-            let reviewHTML = '<h3>Review Your Answers:</h3>';
-            userAnswers.forEach((answer, index) => {
-                reviewHTML += `
-                    <div class="question-review" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #dee2e6;">
-                        <p><strong>Question ${index + 1}:</strong> ${answer.question}</p>
-                        <p class="${answer.isCorrect ? 'correct-answer' : 'wrong-answer'}">
-                            Your answer: ${answer.userAnswer} 
-                            ${!answer.isCorrect ? `<span class="user-answer">(Correct: ${answer.correctAnswer})</span>` : ''}
-                        </p>
-                    </div>
-                `;
+            // Initialize selected state for any pre-selected options
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.option').classList.add('selected');
             });
-            
-            answersReview.innerHTML = reviewHTML;
-            
-            // Scroll to top of results
-            window.scrollTo(0, 0);
-        }
-
-        // Restart the quiz
-        function restartQuiz() {
-            // Reset timer
-            timeLeft = 30 * 60;
-            
-            // Clear form
-            quizForm.innerHTML = '';
-            
-            // Hide results, show quiz
-            resultContent.style.display = 'none';
-            quizContent.style.display = 'block';
-            
-            // Reinitialize quiz
-            initQuiz();
-        }
-
-        // Initialize the quiz when the page loads
-        document.addEventListener('DOMContentLoaded', initQuiz);
+        });
     </script>
 </body>
 </html>
